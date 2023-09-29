@@ -1,0 +1,17 @@
+{
+  "name": "webdl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "telegraf": "^4.14.0",
+    "uuid": "^9.0.1",
+    "valid-url": "^1.0.9"
+  }
+}
