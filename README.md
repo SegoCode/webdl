@@ -2,6 +2,8 @@
 
 Telegram bot in Node.js for downloading social media videos using yt-dlp 
 
+<img  src="https://raw.githubusercontent.com/SegoCode/webdl_bot/main/media/demo.gif">
+
 ## Usage & info
 
 webdl_bot accepts a video URL, downloads it, and sends it back to the user as a video message.
