@@ -8,8 +8,6 @@ const path = require('path');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 bot.command('start', (ctx) => {
     ctx.reply('👋 ¡Hola! Iniciado el bot de descarga de videos 🎥. Envía un enlace válido 🌐 para iniciar la descarga. 📥');
 });
@@ -19,7 +17,6 @@ bot.on('text', async (ctx) => {
     let texto = ctx.message.text;
 
     if (validUrl.isUri(texto)) {
-        await delay(1000);
         const loadingMsg = await ctx.reply('Peticion de descarga lanzada 🔄', { reply_to_message_id: ctx.message.message_id });
         await ctx.replyWithChatAction('upload_video');
 
@@ -48,7 +45,6 @@ bot.on('text', async (ctx) => {
             const fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
 
             if (fileSizeInMegabytes <= 50) {
-                await delay(1000);
                 await ctx.replyWithVideo({ source: fs.createReadStream(outputFile) }, { reply_to_message_id: ctx.message.message_id });
                 await ctx.telegram.deleteMessage(ctx.chat.id, loadingMsg.message_id);
                 console.log(`Archivo enviado y mensaje eliminado: ${outputFile}`);
