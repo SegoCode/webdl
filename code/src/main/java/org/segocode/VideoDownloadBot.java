@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.*;
 
 public class VideoDownloadBot extends TelegramLongPollingBot {
-    private static final String BOT_TOKEN = "TOKEN-HERE";
+    private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private final UrlValidator urlValidator = new UrlValidator();
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -60,7 +60,7 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
                 executorService.submit(task);
             } else {
                 sendTextMessage(chatId, messageId, "❌ Oops! that doesn't seem to be a valid link.");
-                System.out.println("❌ Invalid URL received from @" + username + ": " + messageText);
+                System.err.println("❌ Invalid URL received from @" + username + ": " + messageText);
             }
         }
     }
@@ -112,16 +112,25 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
      * @param filePath         The path of the video file to be sent.
      */
     private void sendVideo(Long chatId, Integer replyToMessageId, String filePath) {
-        SendVideo sendVideoRequest = new SendVideo(); // Create a new SendVideo object
-        sendVideoRequest.setChatId(chatId.toString()); // Set the chat ID
-        sendVideoRequest.setReplyToMessageId(replyToMessageId); // Set the ID of the message to which this video will be a reply
-        sendVideoRequest.setVideo(new InputFile(new File(filePath))); // Set the video file to be sent
-        try {
-            execute(sendVideoRequest); // Execute the sending of the video
-        } catch (Exception e) {
-            e.printStackTrace();
+        File videoFile = new File(filePath);
+        if (videoFile.exists()) {
+            System.out.println("🎬 Preparing to send video: " + filePath);
+            SendVideo sendVideoRequest = new SendVideo(); // Create a new SendVideo object
+            sendVideoRequest.setChatId(chatId.toString()); // Set the chat ID
+            sendVideoRequest.setReplyToMessageId(replyToMessageId); // Set the ID of the message to which this video will be a reply
+            sendVideoRequest.setVideo(new InputFile(videoFile)); // Set the video file to be sent
+            try {
+                execute(sendVideoRequest); // Execute the sending of the video
+                System.out.println("✅ Video sent successfully to chat ID: " + chatId);
+            } catch (Exception e) {
+                System.err.println("❌ Error while sending video: " + filePath);
+                e.printStackTrace();
+            }
+        } else {
+            System.err.println("❌ File not found: " + filePath);
         }
     }
+
 
     /**
      * This method is used to execute a command in the system's command line.
@@ -144,7 +153,7 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
             if (exitCode == 0) {
                 System.out.println("✅ Video downloaded successfully. Saved as: ./downloads/" + UUID + ".mp4");
             } else {
-                System.out.println("❌ Failed to download video. Command exited with code: " + exitCode);
+                System.err.println("❌ Failed to download video. Command exited with code: " + exitCode);
             }
         } catch (IOException | InterruptedException e) {
             System.err.println("⚠️ Error occurred while executing command:");
@@ -168,7 +177,7 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
             if (file.delete()) {
                 System.out.println("🗑️ File " + filePath + " deleted successfully.");
             } else {
-                System.out.println("❌ Failed to delete the file " + filePath + ".");
+                System.err.println("❌ Failed to delete the file " + filePath + ".");
             }
         } else {
             System.out.println("🔍 File " + filePath + " not found.");
