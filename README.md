@@ -1,4 +1,4 @@
-# webdl_bot
+# webdl
 
 Telegram bot in Node.js for downloading social media videos using yt-dlp 
 
@@ -9,7 +9,7 @@ Telegram bot in Node.js for downloading social media videos using yt-dlp
 webdl_bot accepts a video URL, downloads it, and sends it back to the user as a video message.
 
 ```shell
-node index.js
+
 ```
 Clone and run the project from source code.
 ```
@@ -22,7 +22,8 @@ node index.js
 For Docker deployment, make sure to set up environment variables as per your Dockerfile.
 
 ```
-docker build -t webdl .
-docker run webdl
+mvn clean package
+docker build -t webdl-image .
+docker run -e BOT_TOKEN=your-bot-token --name webdl webdl-image
 ```
 
