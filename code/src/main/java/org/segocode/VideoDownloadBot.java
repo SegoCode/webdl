@@ -144,7 +144,7 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
      */
     private void executeCommand(String url, String UUID) throws IOException, InterruptedException {
         System.out.println("⬇️ Starting video download from URL: " + url);
-        String command = "yt-dlp -o ./downloads/" + UUID + ".mp4 " + url;
+        String command = "yt-dlp -S ext -o ./downloads/" + UUID + " " + url;
         ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh", "-c", command);
 
         try {
