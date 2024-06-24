@@ -14,10 +14,8 @@ RUN apk add --no-cache openjdk21 python3 py3-pip
 # Set the YT_DLP environment variable
 ENV YT_DLP=/usr/local/bin/yt-dlp
 
-# Create the application directory
-RUN mkdir -p /app/downloads
-
 # Copy all necessary files to the app directory
+# Everything for a future compilation CI
 COPY . /app
 
 # Run the application
