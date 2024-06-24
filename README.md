@@ -1,25 +1,41 @@
 # webdl
 
-Telegram bot in Node.js for downloading social media videos using yt-dlp 
-
 <img  src="https://raw.githubusercontent.com/SegoCode/webdl_bot/main/media/demo.gif">
 
-## Usage & info
+<p align="center">
+  <a href="#about">About</a> •
+  <a href="#features">Features</a> •
+  <a href="#quick-start--information">Quick Start & Information</a>
+</p>
 
-webdl_bot accepts a video URL, downloads it, and sends it back to the user as a video message.
 
-```shell
+## About
+Telegram bot in Java for downloading social media videos using yt-dlp
 
-```
+## Features
+
+- Non-blocking message queue processing
+
+- Dynamic interaction with messages
+
+- No complex architecture, simple and easy for everyone
+
+- The fewest possible dependencies
+
+
+## Quick Start & Information
+
+webdl accepts a video URL, downloads it, and sends it back to the user as a video message.
+
 Clone and run the project from source code.
 ```
-git clone https://github.com/SegoCode/webdl_bot
-cd webdl_bot\src
-node index.js
+git clone https://github.com/SegoCode/webdl
+cd webdl\code
+mvn clean package
+java -jar webdl.jar
 ```
 
-## Docker
-For Docker deployment, make sure to set up environment variables as per your Dockerfile.
+For Docker deployment, make sure to set up environment variables.
 
 ```
 mvn clean package
