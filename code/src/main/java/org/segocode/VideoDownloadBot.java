@@ -53,7 +53,7 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
                         deleteFile("./downloads/" + uuid + ".mp4");
                         System.out.println("✅ Download and cleanup completed for @" + username);
                     } catch (IOException | InterruptedException e) {
-                        System.err.println("⚠️ Error processing download request for @" + username + ":");
+                        System.err.println("❌ Error processing download request for @" + username + ":");
                         e.printStackTrace();
                     }
                 };
@@ -127,6 +127,7 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         } else {
+            sendTextMessage(chatId, replyToMessageId, "❌ Unable to download the video");
             System.err.println("❌ File not found: " + filePath);
         }
     }
