@@ -40,6 +40,6 @@ For Docker deployment, make sure to set up environment variables.
 ```
 mvn clean package
 docker build -t webdl-image .
-docker run -e BOT_TOKEN=your-bot-token --name webdl webdl-image
+docker run -e BOT_TOKEN=your-bot-token -v /mnt/drive/data/webdl:/downloads --name webdl webdl-image
 ```
 
