@@ -1,6 +1,6 @@
 # webdl
 
-<img  src="https://raw.githubusercontent.com/SegoCode/webdl_bot/main/media/demo.gif">
+<img  src="https://raw.githubusercontent.com/SegoCode/webdl_bot/main/media/demo2.gif">
 
 <p align="center">
   <a href="#about">About</a> •
