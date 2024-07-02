@@ -25,21 +25,24 @@ Telegram bot in Java for downloading social media videos using yt-dlp
 
 ## Quick Start & Information
 
-webdl accepts a video URL, downloads it, and sends it back to the user as a video message.
+webdl accepts a video URL, downloads it using [yt-dlp](https://github.com/yt-dlp/yt-dlp), and sends it back to the user as a video message.
 
 Clone and run the project from source code.
 ```
 git clone https://github.com/SegoCode/webdl
 cd webdl\code
 mvn clean package
-java -jar webdl.jar
+java -jar target/webdl.jar
 ```
 
 For Docker deployment, make sure to set up environment variables.
-
+Use a temp volume for the download, it will delete after send.
 ```
 mvn clean package
 docker build -t webdl-image .
 docker run -e BOT_TOKEN=your-bot-token -v /mnt/drive/data/webdl:/downloads --name webdl webdl-image
 ```
-
+---
+<p align="center"><a href="https://github.com/SegoCode/webdl/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=SegoCode/webdl" />
+</a></p>
