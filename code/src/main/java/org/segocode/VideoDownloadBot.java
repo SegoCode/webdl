@@ -113,8 +113,24 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
      */
     private void sendVideo(Long chatId, Integer replyToMessageId, String filePath) {
         File videoFile = new File(filePath);
+        if (!videoFile.exists()) {
+            // Try without .mp4 extension
+            String filePathWithoutExtension = filePath.replace(".mp4", "");
+            videoFile = new File(filePathWithoutExtension);
+            if (videoFile.exists()) {
+                // Rename the file to add .mp4 extension
+                File renamedFile = new File(filePathWithoutExtension + ".mp4");
+                if (!videoFile.renameTo(renamedFile)) {
+                    System.err.println("❌ Unable to rename the file: " + filePathWithoutExtension);
+                    sendTextMessage(chatId, replyToMessageId, "❌ Unable to rename the video file");
+                    return;
+                }
+                videoFile = renamedFile;
+            }
+        }
+
         if (videoFile.exists()) {
-            System.out.println("🎬 Preparing to send video: " + filePath);
+            System.out.println("🎬 Preparing to send video: " + videoFile.getPath());
             SendVideo sendVideoRequest = new SendVideo(); // Create a new SendVideo object
             sendVideoRequest.setChatId(chatId.toString()); // Set the chat ID
             sendVideoRequest.setReplyToMessageId(replyToMessageId); // Set the ID of the message to which this video will be a reply
@@ -123,7 +139,7 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
                 execute(sendVideoRequest); // Execute the sending of the video
                 System.out.println("✅ Video sent successfully to chat ID: " + chatId);
             } catch (Exception e) {
-                System.err.println("❌ Error while sending video: " + filePath);
+                System.err.println("❌ Error while sending video: " + videoFile.getPath());
                 e.printStackTrace();
             }
         } else {
