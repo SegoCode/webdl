@@ -161,21 +161,40 @@ public class VideoDownloadBot extends TelegramLongPollingBot {
     private void executeCommand(String url, String UUID) throws IOException, InterruptedException {
         System.out.println("⬇️ Starting video download from URL: " + url);
         String command = "yt-dlp -S ext -o ./downloads/" + UUID + " " + url;
-        ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh", "-c", command);
 
-        try {
-            Process process = processBuilder.start();
-            System.out.println("⌛ Executing command: " + command);
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                System.out.println("✅ Video downloaded successfully. Saved as: ./downloads/" + UUID + ".mp4");
-            } else {
-                System.err.println("❌ Failed to download video. Command exited with code: " + exitCode);
+        int MAX_RETRIES = 5;
+        int TIMEOUT = 60;
+
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            ProcessBuilder processBuilder = new ProcessBuilder("/bin/sh", "-c", command);
+            System.out.println("⌛ Attempt " + attempt + ": Executing command: " + command);
+
+            Future<Integer> future = Executors.newSingleThreadExecutor().submit(() -> {
+                Process process = processBuilder.start();
+                return process.waitFor();
+            });
+
+            try {
+                int exitCode = future.get(TIMEOUT, TimeUnit.SECONDS);
+                if (exitCode == 0) {
+                    System.out.println("✅ Video downloaded successfully. Saved as: ./downloads/" + UUID + ".mp4");
+                    break;
+                } else {
+                    System.err.println("❌ Failed to download video. Command exited with code: " + exitCode);
+                    if (attempt == MAX_RETRIES) {
+                        throw new IOException("Max retries reached. Command failed with code: " + exitCode);
+                    }
+                }
+            } catch (TimeoutException e) {
+                System.err.println("⚠️ Command timed out after " + TIMEOUT + " seconds.");
+                future.cancel(true); // Cancel the process
+                if (attempt == MAX_RETRIES) {
+                    throw new IOException("Max retries reached. Command timed out.", e);
+                }
+            } catch (ExecutionException | IOException e) {
+                System.err.println("⚠️ Error occurred while executing command:");
+                e.printStackTrace();
             }
-        } catch (IOException | InterruptedException e) {
-            System.err.println("⚠️ Error occurred while executing command:");
-            e.printStackTrace();
-            throw e;
         }
     }
 
