@@ -1,22 +1,25 @@
-# Use the official Alpine as a parent image
+# Build stage: Compile the application using Maven
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+WORKDIR /app
+
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
+RUN mvn package -DskipTests
+
+# Runtime stage: Run the application
 FROM alpine:latest
 
-# Install the necessary packages
 RUN apk update && \
     apk add --no-cache wget curl ffmpeg && \
     wget -O /usr/local/bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp && \
     chmod a+rx /usr/local/bin/yt-dlp && \
     rm -rf /var/cache/apk/*
 
-# Install the necessary packages
 RUN apk add --no-cache openjdk21 python3 py3-pip
 
-# Set the YT_DLP environment variable
-ENV YT_DLP=/usr/local/bin/yt-dlp
+ENV YT_DLP=/usr/bin/yt-dlp PYTHONUNBUFFERED=1
 
-# Copy all necessary files to the app directory
-# Everything for a future compilation CI
-COPY . /app
-
-# Run the application
-ENTRYPOINT ["java","-jar","/app/target/webdl.jar"]
+WORKDIR /app
+COPY --from=build /app/target/webdl.jar /app/webdl.jar
+ENTRYPOINT ["java", "-jar", "/app/webdl.jar"]
