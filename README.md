@@ -18,14 +18,9 @@ Telegram bot in Java for downloading social media videos using yt-dlp
 
 - Dynamic interaction with messages
 
-- No complex architecture, simple and easy for everyone
-
-- The fewest possible dependencies
-
-
 ## Quick Start & Information
 
-webdl accepts a video URL, downloads it using [yt-dlp](https://github.com/yt-dlp/yt-dlp), and sends it back to the user as a video message.
+Webdl accepts a video URL, downloads it using [yt-dlp](https://github.com/yt-dlp/yt-dlp), and sends it back to the user as a video message.
 
 Clone and run the project from source code.
 ```
