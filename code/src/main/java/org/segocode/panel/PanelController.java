@@ -11,9 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class PanelController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PanelController.class);
@@ -48,7 +45,7 @@ private void handleAdminRequest(Context ctx) {
     ctx.contentType("text/html");
 
     try {
-        InputStream inputStream = getClass().getResourceAsStream("/org/segocode/panel/views/admin.html");
+        InputStream inputStream = getClass().getResourceAsStream("/views/admin.html");
         String htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         String jsonData = new Gson().toJson(((DataRootContainer)storageManager.root()).getUsers());
         htmlContent = htmlContent.replace("{{!user_data}}", jsonData);
