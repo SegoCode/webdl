@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bot Activity dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+<!-- Header -->
+<header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">User activity dashboard</h1>
+        <div class="text-sm text-gray-500">Last updated: <span id="lastUpdate"></span></div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+        <!-- Stat Box Template -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 mr-4">
+                    <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm font-medium">Total users</h3>
+                    <p class="text-2xl font-bold text-gray-900" id="totalUsers">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 mr-4">
+                    <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm font-medium">Total messages</h3>
+                    <p class="text-2xl font-bold text-gray-900" id="totalMessages">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 mr-4">
+                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                        />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm font-medium">Avg messages/user</h3>
+                    <p class="text-2xl font-bold text-gray-900" id="avgMessages">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-100 mr-4">
+                    <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 text-sm font-medium">Active languages</h3>
+                    <p class="text-2xl font-bold text-gray-900" id="activeLanguages">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-medium mb-4">Messages per user</h3>
+            <canvas id="messagesPerUserChart"></canvas>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-medium mb-4">Language distribution</h3>
+            <canvas id="languageChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">User activity</h2>
+        <div class="mb-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="mr-2">Show</span>
+                <select id="table-entries" class="border border-gray-300 rounded-md px-3 py-1">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <span class="ml-2">entries</span>
+            </div>
+            <input type="text" id="table-search" placeholder="Search users..." class="border border-gray-300 rounded-md px-3 py-1" />
+        </div>
+        <div class="overflow-x-auto">
+            <table id="usersTable" class="w-full border-collapse">
+                <thead>
+                <tr class="bg-gray-50 text-left">
+                    <th class="px-6 py-3 border-b border-gray-200">Name</th>
+                    <th class="px-6 py-3 border-b border-gray-200">Username</th>
+                    <th class="px-6 py-3 border-b border-gray-200">Language</th>
+                    <th class="px-6 py-3 border-b border-gray-200">Messages</th>
+                    <th class="px-6 py-3 border-b border-gray-200">Last active</th>
+                </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+            <div class="text-sm text-gray-500">Showing <span id="showing-start">0</span> to <span id="showing-end">0</span> of <span id="total-entries">0</span> entries</div>
+            <div class="flex">
+                <button id="prev-page" class="px-3 py-1 border border-gray-300 rounded-l-md bg-white text-sm">Previous</button>
+                <button id="next-page" class="px-3 py-1 border border-gray-300 rounded-r-md bg-white text-sm border-l-0">Next</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Scripts -->
+<script>
+    const users = {{!user_data}}
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Initialize dashboard
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        updateStats();
+        initTable();
+        initCharts();
+    });
+
+    function updateStats() {
+        const totalUsers = users.length;
+        const totalMessages = users.reduce((sum, user) => sum + user.messageCount, 0);
+        const avgMessages = totalUsers > 0 ? Math.round(totalMessages / totalUsers) : 0;
+        const activeLanguages = new Set(users.map(u => u.languageCode)).size;
+
+        document.getElementById('totalUsers').textContent = totalUsers;
+        document.getElementById('totalMessages').textContent = totalMessages.toLocaleString();
+        document.getElementById('avgMessages').textContent = avgMessages;
+        document.getElementById('activeLanguages').textContent = activeLanguages;
+    }
+
+    function initTable() {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            const lastActiveDate = new Date(user.lastMessageTime);
+
+            row.innerHTML = `
+                <td class="px-6 py-3 border-b border-gray-200">${user.firstName} ${user.lastName}</td>
+                <td class="px-6 py-3 border-b border-gray-200 text-gray-600">@${user.userName}</td>
+                <td class="px-6 py-3 border-b border-gray-200">
+                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">${user.languageCode.toUpperCase()}</span>
+                </td>
+                <td class="px-6 py-3 border-b border-gray-200 font-medium">${user.messageCount.toLocaleString()}</td>
+                <td class="px-6 py-3 border-b border-gray-200 text-sm">
+                    <div class="text-gray-600">${lastActiveDate.toLocaleDateString()}</div>
+                    <div class="text-gray-400 text-xs">${lastActiveDate.toLocaleTimeString()}</div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        document.getElementById('showing-start').textContent = '1';
+        document.getElementById('showing-end').textContent = users.length.toString();
+        document.getElementById('total-entries').textContent = users.length.toString();
+    }
+
+    function initCharts() {
+        // Messages per User Chart
+        new Chart(document.getElementById('messagesPerUserChart'), {
+            type: 'bar',
+            data: {
+                labels: users.map(user => user.userName),
+                datasets: [{
+                    label: 'Number of messages',
+                    data: users.map(user => user.messageCount),
+                    backgroundColor: '#4F46E5',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 },
+                        title: { display: true, text: 'Message Count' }
+                    }
+                }
+            }
+        });
+
+        // Language Distribution Chart
+        const languageCounts = users.reduce((counts, user) => {
+            counts[user.languageCode] = (counts[user.languageCode] || 0) + 1;
+            return counts;
+        }, {});
+
+        new Chart(document.getElementById('languageChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(languageCounts).map(lang => lang.toUpperCase()),
+                datasets: [{
+                    label: 'Users per Language',
+                    data: Object.values(languageCounts),
+                    backgroundColor: '#4F46E5',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 },
+                        title: { display: true, text: 'Number of users' }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
