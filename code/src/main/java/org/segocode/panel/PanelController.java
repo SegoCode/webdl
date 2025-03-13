@@ -32,11 +32,10 @@ public class PanelController {
         LOGGER.info("Panel controller started on port 8080");
     }
 
-    public static synchronized PanelController start(EmbeddedStorageManager storageManager) {
+    public static synchronized void start(EmbeddedStorageManager storageManager) {
         if (instance == null) {
             instance = new PanelController(storageManager);
         }
-        return instance;
     }
 
     private void configureRoutes() {
