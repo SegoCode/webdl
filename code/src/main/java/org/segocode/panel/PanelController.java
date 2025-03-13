@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,8 +48,8 @@ private void handleAdminRequest(Context ctx) {
     ctx.contentType("text/html");
 
     try {
-        Path htmlFilePath = Paths.get("src/main/java/org/segocode/panel/views/admin.html");
-        String htmlContent = Files.readString(htmlFilePath);
+        InputStream inputStream = getClass().getResourceAsStream("/org/segocode/panel/views/admin.html");
+        String htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         String jsonData = new Gson().toJson(((DataRootContainer)storageManager.root()).getUsers());
         htmlContent = htmlContent.replace("{{!user_data}}", jsonData);
 
