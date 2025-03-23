@@ -100,19 +100,6 @@
     <!-- Users Table -->
     <div class="bg-white rounded-lg shadow p-6">
         <h2 class="text-xl font-semibold mb-4">User activity</h2>
-        <div class="mb-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <span class="mr-2">Show</span>
-                <select id="table-entries" class="border border-gray-300 rounded-md px-3 py-1">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-                <span class="ml-2">entries</span>
-            </div>
-            <input type="text" id="table-search" placeholder="Search users..." class="border border-gray-300 rounded-md px-3 py-1" />
-        </div>
         <div class="overflow-x-auto">
             <table id="usersTable" class="w-full border-collapse">
                 <thead>
@@ -126,13 +113,6 @@
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
-        </div>
-        <div class="mt-4 flex justify-between items-center">
-            <div class="text-sm text-gray-500">Showing <span id="showing-start">0</span> to <span id="showing-end">0</span> of <span id="total-entries">0</span> entries</div>
-            <div class="flex">
-                <button id="prev-page" class="px-3 py-1 border border-gray-300 rounded-l-md bg-white text-sm">Previous</button>
-                <button id="next-page" class="px-3 py-1 border border-gray-300 rounded-r-md bg-white text-sm border-l-0">Next</button>
-            </div>
         </div>
     </div>
 </main>
@@ -170,7 +150,7 @@
             const lastActiveDate = new Date(user.lastMessageTime);
 
             row.innerHTML = `
-                <td class="px-6 py-3 border-b border-gray-200">${user.firstName} ${user.lastName}</td>
+                <td class="px-6 py-3 border-b border-gray-200">${user.firstName} ${user.lastName || ''}</td>
                 <td class="px-6 py-3 border-b border-gray-200 text-gray-600">@${user.userName}</td>
                 <td class="px-6 py-3 border-b border-gray-200">
                     <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">${user.languageCode.toUpperCase()}</span>
