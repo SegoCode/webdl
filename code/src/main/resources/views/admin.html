@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bot Activity dashboard</title>
+    <title>Usage dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -11,7 +11,7 @@
 <!-- Header -->
 <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">User activity dashboard</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Usage dashboard</h1>
         <div class="text-sm text-gray-500">Last updated: <span id="lastUpdate"></span></div>
     </div>
 </header>
@@ -120,10 +120,11 @@
 <!-- Scripts -->
 <script>
     const users = {{!user_data}}
-
     document.addEventListener('DOMContentLoaded', () => {
-        // Initialize dashboard
-        document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        const lastUpdateElement = document.getElementById('lastUpdate');
+        if (lastUpdateElement) {
+            lastUpdateElement.textContent = new Date().toLocaleString();
+        }
         updateStats();
         initTable();
         initCharts();
@@ -135,10 +136,15 @@
         const avgMessages = totalUsers > 0 ? Math.round(totalMessages / totalUsers) : 0;
         const activeLanguages = new Set(users.map(u => u.languageCode)).size;
 
-        document.getElementById('totalUsers').textContent = totalUsers;
-        document.getElementById('totalMessages').textContent = totalMessages.toLocaleString();
-        document.getElementById('avgMessages').textContent = avgMessages;
-        document.getElementById('activeLanguages').textContent = activeLanguages;
+        const totalUsersElement = document.getElementById('totalUsers');
+        const totalMessagesElement = document.getElementById('totalMessages');
+        const avgMessagesElement = document.getElementById('avgMessages');
+        const activeLanguagesElement = document.getElementById('activeLanguages');
+
+        if (totalUsersElement) totalUsersElement.textContent = totalUsers;
+        if (totalMessagesElement) totalMessagesElement.textContent = totalMessages.toLocaleString();
+        if (avgMessagesElement) avgMessagesElement.textContent = avgMessages;
+        if (activeLanguagesElement) activeLanguagesElement.textContent = activeLanguages;
     }
 
     function initTable() {
@@ -163,10 +169,6 @@
             `;
             tableBody.appendChild(row);
         });
-
-        document.getElementById('showing-start').textContent = '1';
-        document.getElementById('showing-end').textContent = users.length.toString();
-        document.getElementById('total-entries').textContent = users.length.toString();
     }
 
     function initCharts() {
