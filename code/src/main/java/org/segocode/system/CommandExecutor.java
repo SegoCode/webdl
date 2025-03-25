@@ -27,7 +27,7 @@ public class CommandExecutor {
 
         // The --quiet option is important to prevent deadlocks by ensuring the output buffer is not filled.
         // TODO: make a StreamGobbler to handle buffered output and avoid deadlocks.
-        String[] command = { ytDlpCommand, "-q", "-S", "ext,res:720", "-o", outputPath, url };
+        String[] command = { ytDlpCommand, "-q", "-S", "vcodec:h264,fps,res:720,acodec:m4a", "-o", outputPath, url };
 
         LOGGER.debug("Starting download command: {}", String.join(" ", command));
 
