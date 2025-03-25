@@ -29,7 +29,7 @@ public class CommandExecutor {
         // TODO: make a StreamGobbler to handle buffered output and avoid deadlocks.
         String[] command = { ytDlpCommand, "-q", "-S", "vcodec:h264,fps,res:1080,acodec:m4a", "-o", outputPath, url };
 
-        LOGGER.debug("Starting download command: {}", String.join(" ", command));
+        LOGGER.info("Starting download command: {}", String.join(" ", command));
 
         int attempt = 0;
         while (attempt++ < MAX_RETRIES) {
