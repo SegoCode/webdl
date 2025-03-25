@@ -26,9 +26,7 @@ public class CommandExecutor {
 
         // The -q option is important to prevent deadlocks by ensuring the output buffer is not filled.
         // TODO: make a StreamGobbler to handle buffered output and avoid deadlocks.
-        String[] command = { ytDlpCommand, "-q", "-S", "ext,res:420", "-o", outputPath, url };
-
-        LOGGER.debug("Starting download command: {}", String.join(" ", command));
+        String[] command = { ytDlpCommand, "-q", "-S", "ext,res:720", "-o", outputPath, url };
 
         int attempt = 0;
         while (attempt++ < MAX_RETRIES) {
