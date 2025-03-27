@@ -20,12 +20,12 @@ public class Main {
         try {
             LOGGER.info("Starting storage manager...");
             final EmbeddedStorageManager storageManager = EmbeddedStorage.start();
-            LOGGER.info("Starting webp anel app...");
-            PanelController.start(storageManager);
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             LOGGER.info("Starting the video download bot...");
             botsApi.registerBot(new Webdlbot(storageManager));
             LOGGER.info("Bot started successfully and ready to download videos 🚀");
+            LOGGER.info("Starting webp anel app...");
+            PanelController.start(storageManager);
         } catch (Exception e) {
             LOGGER.error("Error while attempting to start the bot. Error details:", e);
         }
