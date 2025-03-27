@@ -71,7 +71,7 @@ public class Webdlbot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             try {
                 Integer queuedMessageId;
-                if (executorService.getActiveCount() > 0 || executorService.getQueue().size() > 0) {
+                if (executorService.getActiveCount() > 0 || !executorService.getQueue().isEmpty()) {
                     String messageTime = DOWNLOAD_REQUEST_QUEUED + " (<" + executorService.getQueue().size() + "m)";
                     LOGGER.info("Executor is busy, queuing the message from @{}", update.getMessage().getFrom().getUserName());
                     queuedMessageId = execute(MessageService.sendTextMessage(update.getMessage().getChatId(), update.getMessage().getMessageId(), messageTime)).getMessageId();
