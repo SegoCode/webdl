@@ -95,7 +95,8 @@ public class Webdlbot extends TelegramLongPollingBot {
                 LOGGER.error("Failed on onUpdateReceived, error: {}", e.getMessage(), e);
                 handleDispatchError(update, e);
             } finally {
-                storageManager.store(loadMetricsData(update));
+                storageManager.setRoot(loadMetricsData(update));
+                storageManager.storeRoot();
             }
         }
     }
