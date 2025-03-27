@@ -18,8 +18,8 @@ public class FileUtil {
      *
      * @param id the identifier of the file to delete
      */
-
-    public static void deleteFileById(int id) { // Currently, since the queue is for a single user at a time,we do not need to delete by ID.
+    // Currently, since the queue is for a single user at a time,we do not need to delete by ID.
+    public static void deleteFileById(int id) {
 
         Path path = Paths.get("./downloads/" + id + ".mp4");
         try {
