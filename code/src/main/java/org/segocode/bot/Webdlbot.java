@@ -25,7 +25,7 @@ public class Webdlbot extends TelegramLongPollingBot {
     private static final Logger LOGGER = LoggerFactory.getLogger(Webdlbot.class);
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
 
-    private StorageManager storageManager;
+    private final StorageManager storageManager;
 
     // Create a ThreadPoolExecutor with a single virtual thread
     private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(
