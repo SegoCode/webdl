@@ -44,7 +44,7 @@ public class Webdlbot extends TelegramLongPollingBot {
 
     private void initializeRootContainer() {
         Object root = storageManager.root();
-        if (root == null || !(root instanceof DataRootContainer)) {
+        if (!(root instanceof DataRootContainer)) {
             storageManager.setRoot(new DataRootContainer());
             LOGGER.info("Initialized new DataRootContainer as db root object");
         }
@@ -95,8 +95,7 @@ public class Webdlbot extends TelegramLongPollingBot {
                 LOGGER.error("Failed on onUpdateReceived, error: {}", e.getMessage(), e);
                 handleDispatchError(update, e);
             } finally {
-                loadMetricsData(update);
-                storageManager.storeRoot();
+                storageManager.store(loadMetricsData(update));
             }
         }
     }
@@ -131,7 +130,7 @@ public class Webdlbot extends TelegramLongPollingBot {
         }
     }
 
-    private void loadMetricsData(Update update) {
+    private DataRootContainer loadMetricsData(Update update) {
         // Create or update user data from the Telegram update
         org.telegram.telegrambots.meta.api.objects.User telegramUser = update.getMessage().getFrom();
 
@@ -151,6 +150,7 @@ public class Webdlbot extends TelegramLongPollingBot {
             rootContainer.getUsers().add(newUser);
             LOGGER.info("New user registered: {}", newUser.getUserName());
         }
+        return rootContainer;
     }
 }
 
