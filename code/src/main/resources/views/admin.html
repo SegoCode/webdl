@@ -195,16 +195,10 @@
             chart: {
                 type: 'bar',
                 height: 350,
-                toolbar: {
-                    show: false
-                }
             },
             plotOptions: {
                 bar: {
-                    borderRadius: 6,
-                    dataLabels: {
-                        position: 'top'
-                    }
+                    borderRadius: 10,
                 }
             },
             colors: ['#4F46E5'],
@@ -220,9 +214,6 @@
             dataLabels: {
                 enabled: false
             },
-            grid: {
-                borderColor: '#f3f4f6'
-            }
         };
 
         const messagesPerUserChart = new ApexCharts(document.querySelector("#messagesPerUserChart"), messagesPerUserOptions);
@@ -241,17 +232,11 @@
             }],
             chart: {
                 type: 'bar',
-                height: 350,
-                toolbar: {
-                    show: false
-                }
+                height: 350
             },
             plotOptions: {
                 bar: {
-                    borderRadius: 6,
-                    dataLabels: {
-                        position: 'top'
-                    }
+                    borderRadius: 10,
                 }
             },
             colors: ['#4F46E5'],
@@ -265,18 +250,7 @@
                 }
             },
             dataLabels: {
-                enabled: true,
-                formatter: function (val) {
-                    return val;
-                },
-                offsetY: -20,
-                style: {
-                    fontSize: '12px',
-                    colors: ["#304758"]
-                }
-            },
-            grid: {
-                borderColor: '#f3f4f6'
+                enabled: false
             }
         };
 
