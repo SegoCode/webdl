@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usage dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
 <!-- Header -->
@@ -89,11 +89,11 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-medium mb-4">Messages per user</h3>
-            <canvas id="messagesPerUserChart"></canvas>
+            <div id="messagesPerUserChart"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-medium mb-4">Language distribution</h3>
-            <canvas id="languageChart"></canvas>
+            <div id="languageChart"></div>
         </div>
     </div>
 
@@ -173,29 +173,46 @@
 
     function initCharts() {
         // Messages per User Chart
-        new Chart(document.getElementById('messagesPerUserChart'), {
-            type: 'bar',
-            data: {
-                labels: users.map(user => user.userName),
-                datasets: [{
-                    label: 'Number of messages',
-                    data: users.map(user => user.messageCount),
-                    backgroundColor: '#4F46E5',
-                    borderRadius: 6
-                }]
+        const messagesPerUserOptions = {
+            series: [{
+                name: 'Messages',
+                data: users.map(user => user.messageCount)
+            }],
+            chart: {
+                type: 'bar',
+                height: 350,
+                toolbar: {
+                    show: false
+                }
             },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1 },
-                        title: { display: true, text: 'Message Count' }
+            plotOptions: {
+                bar: {
+                    borderRadius: 6,
+                    dataLabels: {
+                        position: 'top'
                     }
                 }
+            },
+            colors: ['#4F46E5'],
+            xaxis: {
+                categories: users.map(user => user.userName),
+                position: 'bottom'
+            },
+            yaxis: {
+                title: {
+                    text: 'Message Count'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            grid: {
+                borderColor: '#f3f4f6'
             }
-        });
+        };
+
+        const messagesPerUserChart = new ApexCharts(document.querySelector("#messagesPerUserChart"), messagesPerUserOptions);
+        messagesPerUserChart.render();
 
         // Language Distribution Chart
         const languageCounts = users.reduce((counts, user) => {
@@ -203,29 +220,54 @@
             return counts;
         }, {});
 
-        new Chart(document.getElementById('languageChart'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(languageCounts).map(lang => lang.toUpperCase()),
-                datasets: [{
-                    label: 'Users per Language',
-                    data: Object.values(languageCounts),
-                    backgroundColor: '#4F46E5',
-                    borderRadius: 6
-                }]
+        const languageChartOptions = {
+            series: [{
+                name: 'Users',
+                data: Object.values(languageCounts)
+            }],
+            chart: {
+                type: 'bar',
+                height: 350,
+                toolbar: {
+                    show: false
+                }
             },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { stepSize: 1 },
-                        title: { display: true, text: 'Number of users' }
+            plotOptions: {
+                bar: {
+                    borderRadius: 6,
+                    dataLabels: {
+                        position: 'top'
                     }
                 }
+            },
+            colors: ['#4F46E5'],
+            xaxis: {
+                categories: Object.keys(languageCounts).map(lang => lang.toUpperCase()),
+                position: 'bottom'
+            },
+            yaxis: {
+                title: {
+                    text: 'Number of users'
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return val;
+                },
+                offsetY: -20,
+                style: {
+                    fontSize: '12px',
+                    colors: ["#304758"]
+                }
+            },
+            grid: {
+                borderColor: '#f3f4f6'
             }
-        });
+        };
+
+        const languageChart = new ApexCharts(document.querySelector("#languageChart"), languageChartOptions);
+        languageChart.render();
     }
 </script>
 </body>
