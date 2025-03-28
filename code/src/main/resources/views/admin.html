@@ -92,8 +92,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-gray-500 text-sm font-medium">Active languages</h3>
-                    <p class="text-2xl font-bold text-gray-900" id="activeLanguages">0</p>
+                    <h3 class="text-gray-500 text-sm font-medium">Active Countrys</h3>
+                    <p class="text-2xl font-bold text-gray-900" id="activeCountrys">0</p>
                 </div>
             </div>
         </div>
@@ -106,8 +106,8 @@
             <div id="messagesPerUserChart"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-medium mb-4">Language distribution</h3>
-            <div id="languageChart"></div>
+            <h3 class="text-lg font-medium mb-4">Country distribution</h3>
+            <div id="CountryChart"></div>
         </div>
     </div>
 
@@ -120,7 +120,7 @@
                 <tr class="bg-gray-50 text-left">
                     <th class="px-6 py-3 border-b border-gray-200">Name</th>
                     <th class="px-6 py-3 border-b border-gray-200">Username</th>
-                    <th class="px-6 py-3 border-b border-gray-200">Language</th>
+                    <th class="px-6 py-3 border-b border-gray-200">Country</th>
                     <th class="px-6 py-3 border-b border-gray-200">Messages</th>
                     <th class="px-6 py-3 border-b border-gray-200">Last active</th>
                 </tr>
@@ -148,17 +148,17 @@
         const totalUsers = users.length;
         const totalMessages = users.reduce((sum, user) => sum + user.messageCount, 0);
         const avgMessages = totalUsers > 0 ? Math.round(totalMessages / totalUsers) : 0;
-        const activeLanguages = new Set(users.map(u => u.languageCode)).size;
+        const activeCountrys = new Set(users.map(u => u.CountryCode)).size;
 
         const totalUsersElement = document.getElementById('totalUsers');
         const totalMessagesElement = document.getElementById('totalMessages');
         const avgMessagesElement = document.getElementById('avgMessages');
-        const activeLanguagesElement = document.getElementById('activeLanguages');
+        const activeCountrysElement = document.getElementById('activeCountrys');
 
         if (totalUsersElement) totalUsersElement.textContent = totalUsers;
         if (totalMessagesElement) totalMessagesElement.textContent = totalMessages.toLocaleString();
         if (avgMessagesElement) avgMessagesElement.textContent = avgMessages;
-        if (activeLanguagesElement) activeLanguagesElement.textContent = activeLanguages;
+        if (activeCountrysElement) activeCountrysElement.textContent = activeCountrys;
     }
 
     function initTable() {
@@ -173,7 +173,7 @@
                 <td class="px-6 py-3 border-b border-gray-200">${user.firstName} ${user.lastName || ''}</td>
                 <td class="px-6 py-3 border-b border-gray-200 text-gray-600">@${user.userName}</td>
                 <td class="px-6 py-3 border-b border-gray-200">
-                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">${user.languageCode.toUpperCase()}</span>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">${user.CountryCode.toUpperCase()}</span>
                 </td>
                 <td class="px-6 py-3 border-b border-gray-200 font-medium">${user.messageCount.toLocaleString()}</td>
                 <td class="px-6 py-3 border-b border-gray-200 text-sm">
@@ -228,16 +228,16 @@
         const messagesPerUserChart = new ApexCharts(document.querySelector("#messagesPerUserChart"), messagesPerUserOptions);
         messagesPerUserChart.render();
 
-        // Language Distribution Chart
-        const languageCounts = users.reduce((counts, user) => {
-            counts[user.languageCode] = (counts[user.languageCode] || 0) + 1;
+        // Country Distribution Chart
+        const CountryCounts = users.reduce((counts, user) => {
+            counts[user.CountryCode] = (counts[user.CountryCode] || 0) + 1;
             return counts;
         }, {});
 
-        const languageChartOptions = {
+        const CountryChartOptions = {
             series: [{
                 name: 'Users',
-                data: Object.values(languageCounts)
+                data: Object.values(CountryCounts)
             }],
             chart: {
                 type: 'bar',
@@ -256,7 +256,7 @@
             },
             colors: ['#4F46E5'],
             xaxis: {
-                categories: Object.keys(languageCounts).map(lang => lang.toUpperCase()),
+                categories: Object.keys(CountryCounts).map(lang => lang.toUpperCase()),
                 position: 'bottom'
             },
             yaxis: {
@@ -280,8 +280,8 @@
             }
         };
 
-        const languageChart = new ApexCharts(document.querySelector("#languageChart"), languageChartOptions);
-        languageChart.render();
+        const CountryChart = new ApexCharts(document.querySelector("#CountryChart"), CountryChartOptions);
+        CountryChart.render();
     }
 </script>
 </body>
