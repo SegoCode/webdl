@@ -8,13 +8,27 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
+
 <!-- Header -->
-<header class="bg-white shadow">
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Usage dashboard</h1>
-        <div class="text-sm text-gray-500">Last updated: <span id="lastUpdate"></span></div>
+<header class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="p-2 bg-indigo-100 rounded-lg">
+                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900">Usage Dashboard</h1>
+        </div>
+        <div class="flex items-center space-x-2 text-sm text-gray-500">
+            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Last updated: <span id="lastUpdate" class="font-medium"></span></span>
+        </div>
     </div>
 </header>
+
 
 <!-- Main Content -->
 <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
