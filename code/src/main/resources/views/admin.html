@@ -148,7 +148,7 @@
         const totalUsers = users.length;
         const totalMessages = users.reduce((sum, user) => sum + user.messageCount, 0);
         const avgMessages = totalUsers > 0 ? Math.round(totalMessages / totalUsers) : 0;
-        const activeCountrys = new Set(users.map(u => u.CountryCode)).size;
+        const activeCountrys = new Set(users.map(u => u.languageCode)).size;
 
         const totalUsersElement = document.getElementById('totalUsers');
         const totalMessagesElement = document.getElementById('totalMessages');
@@ -173,7 +173,7 @@
                 <td class="px-6 py-3 border-b border-gray-200">${user.firstName} ${user.lastName || ''}</td>
                 <td class="px-6 py-3 border-b border-gray-200 text-gray-600">@${user.userName}</td>
                 <td class="px-6 py-3 border-b border-gray-200">
-                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">${user.CountryCode.toUpperCase()}</span>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">${user.languageCode.toUpperCase()}</span>
                 </td>
                 <td class="px-6 py-3 border-b border-gray-200 font-medium">${user.messageCount.toLocaleString()}</td>
                 <td class="px-6 py-3 border-b border-gray-200 text-sm">
@@ -230,7 +230,7 @@
 
         // Country Distribution Chart
         const CountryCounts = users.reduce((counts, user) => {
-            counts[user.CountryCode] = (counts[user.CountryCode] || 0) + 1;
+            counts[user.languageCode] = (counts[user.languageCode] || 0) + 1;
             return counts;
         }, {});
 
