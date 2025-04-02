@@ -1,6 +1,7 @@
 # webdl
 
 <img  src="https://raw.githubusercontent.com/SegoCode/webdl_bot/main/media/demo2.gif">
+<img  src="https://raw.githubusercontent.com/SegoCode/webdl_bot/main/media/demoPanel.png">
 
 <p align="center">
   <a href="#about">About</a> •
@@ -17,6 +18,8 @@ Telegram bot in Java for downloading social media videos using yt-dlp
 - Non-blocking message queue processing
 
 - Dynamic interaction with messages
+
+- Panel with usage statistics 
 
 ## Quick Start & Information
 
@@ -35,8 +38,11 @@ Use a temp volume for the download, it will delete after send.
 ```
 mvn clean package
 docker build -t webdl-image .
-docker run -e BOT_TOKEN=your-bot-token -v /mnt/drive/data/webdl:/downloads --name webdl webdl-image
+docker run -e BOT_TOKEN=your-bot-token -p 8080:8080 -v /mnt/drive/data/webdl:/downloads --name webdl webdl-image
 ```
+
+
+
 ---
 <p align="center"><a href="https://github.com/SegoCode/webdl/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=SegoCode/webdl" />
