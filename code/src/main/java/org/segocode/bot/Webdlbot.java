@@ -1,25 +1,31 @@
 package org.segocode.bot;
 
-import org.segocode.bot.utils.Utils;
-import org.segocode.system.CommandExecutor;
-import org.segocode.service.VideoService;
+import org.eclipse.store.storage.types.StorageManager;
+import org.segocode.bot.model.DataRootContainer;
+import org.segocode.bot.model.User;
+import org.segocode.system.command.CommandExecutor;
+import org.segocode.bot.service.VideoService;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.segocode.service.MessageService;
+import org.segocode.bot.service.MessageService;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 import static org.segocode.bot.constants.Messages.*;
-import static org.segocode.bot.utils.Utils.*;
+import static org.segocode.bot.util.MessageUtil.*;
 import static org.segocode.system.util.FileUtil.*;
 
 public class Webdlbot extends TelegramLongPollingBot {
     private static final Logger LOGGER = LoggerFactory.getLogger(Webdlbot.class);
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
+
+    private final StorageManager storageManager;
 
     // Create a ThreadPoolExecutor with a single virtual thread
     private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(
@@ -30,6 +36,20 @@ public class Webdlbot extends TelegramLongPollingBot {
             new LinkedBlockingQueue<>(), // the queue to use for holding tasks before they are executed
             Thread.ofVirtual().factory() // the factory to use when creating new threads
     );
+
+    public Webdlbot(StorageManager storageManager) {
+        this.storageManager = storageManager;
+        initializeRootContainer();
+    }
+
+    private void initializeRootContainer() {
+        Object root = storageManager.root();
+        if (!(root instanceof DataRootContainer)) {
+            storageManager.setRoot(new DataRootContainer());
+            LOGGER.info("Initialized new DataRootContainer as db root object");
+        }
+        LOGGER.info("Root db object contains {} users", ((DataRootContainer) storageManager.root()).getUsers().size());
+    }
 
     @Override
     public String getBotUsername() {
@@ -51,7 +71,7 @@ public class Webdlbot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             try {
                 Integer queuedMessageId;
-                if (executorService.getActiveCount() > 0 || executorService.getQueue().size() > 0) {
+                if (executorService.getActiveCount() > 0 || !executorService.getQueue().isEmpty()) {
                     String messageTime = DOWNLOAD_REQUEST_QUEUED + " (<" + executorService.getQueue().size() + "m)";
                     LOGGER.info("Executor is busy, queuing the message from @{}", update.getMessage().getFrom().getUserName());
                     queuedMessageId = execute(MessageService.sendTextMessage(update.getMessage().getChatId(), update.getMessage().getMessageId(), messageTime)).getMessageId();
@@ -74,6 +94,9 @@ public class Webdlbot extends TelegramLongPollingBot {
             } catch (Exception e) {
                 LOGGER.error("Failed on onUpdateReceived, error: {}", e.getMessage(), e);
                 handleDispatchError(update, e);
+            } finally {
+                storageManager.setRoot(loadMetricsData(update));
+                storageManager.storeRoot();
             }
         }
     }
@@ -106,6 +129,29 @@ public class Webdlbot extends TelegramLongPollingBot {
         } finally {
             cleanDownloadsFolder();
         }
+    }
+
+    private DataRootContainer loadMetricsData(Update update) {
+        // Create or update user data from the Telegram update
+        org.telegram.telegrambots.meta.api.objects.User telegramUser = update.getMessage().getFrom();
+
+        DataRootContainer rootContainer = (DataRootContainer) storageManager.root();
+
+        // Find existing user or create new one
+        String userId = telegramUser.getId().toString();
+        Optional<User> existingUser = rootContainer.findUserById(userId);
+
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            user.recordNewMessage();
+        } else {
+            User newUser = new User(userId, update.getMessage().getChatId(), telegramUser.getUserName(), telegramUser.getFirstName(),
+                    telegramUser.getLastName(), telegramUser.getLanguageCode(), telegramUser.getIsPremium(),
+                    1,LocalDateTime.now().toString());
+            rootContainer.getUsers().add(newUser);
+            LOGGER.info("New user registered: {}", newUser.getUserName());
+        }
+        return rootContainer;
     }
 }
 

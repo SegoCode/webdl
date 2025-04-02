@@ -1,6 +1,6 @@
-package org.segocode.bot.utils;
+package org.segocode.bot.util;
 
-public class Utils {
+public class MessageUtil {
     public static String extractUrlFromMessage(String messageText) {
         int startIndex = messageText.indexOf("http");
         int endIndex = messageText.indexOf(" ", startIndex);

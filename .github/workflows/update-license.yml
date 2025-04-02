@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: develop
 
       - name: Setup git
         run: |
@@ -55,5 +55,5 @@ jobs:
           # Only commit if there are changes
           git diff --staged --quiet || git commit -m "Update LICENSE with repository information"
           
-          # Push directly to main branch
-          git push origin main
+          # Push directly to develop branch
+          git push origin develop
