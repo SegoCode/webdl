@@ -24,6 +24,9 @@ public class VideoService {
             LOGGER.info("Locating video file for message ID {}: {}", replyToMessageId, filePath);
 
             File videoFile = FileUtil.locateVideoFile(filePath);
+            if (videoFile == null) {
+                throw new RuntimeException("Video file not found for message ID: " + replyToMessageId);
+            }
             LOGGER.info("Video file located successfully: {}", videoFile.getPath());
 
             SendVideo sendVideoRequest = createSendVideoRequest(chatId, replyToMessageId, videoFile);

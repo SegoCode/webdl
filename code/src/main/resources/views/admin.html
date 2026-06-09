@@ -3,167 +3,537 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Usage dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #111111;
+            --surface-2: #151515;
+            --line: #2a2a2a;
+            --text-display: #f3f3f3;
+            --text-primary: #dcdcdc;
+            --text-secondary: #9a9a9a;
+            --text-disabled: #676767;
+            --ok: #32a852;
+            --warn: #c78f1e;
+            --alert: #d71921;
+        }
+
+        [data-theme="light"] {
+            --bg: #f2f0eb;
+            --surface: #ffffff;
+            --surface-2: #faf8f3;
+            --line: #d8d3c8;
+            --text-display: #141414;
+            --text-primary: #242424;
+            --text-secondary: #636363;
+            --text-disabled: #949494;
+            --ok: #2c8947;
+            --warn: #a06a00;
+            --alert: #c4121c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text-primary);
+            font-family: "Space Grotesk", sans-serif;
+            min-height: 100vh;
+            letter-spacing: 0.01em;
+        }
+
+        .shell {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 28px 18px 48px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 42px;
+        }
+
+        .headline {
+            margin: 0;
+            color: var(--text-display);
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1;
+            letter-spacing: 0.015em;
+        }
+
+        .subtitle {
+            margin: 8px 0 0;
+            color: var(--text-secondary);
+            font-size: 0.86rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-family: "Space Mono", monospace;
+        }
+
+        .meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .meta-row {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-family: "Space Mono", monospace;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin-right: 7px;
+            border-radius: 999px;
+            background: var(--ok);
+            vertical-align: baseline;
+        }
+
+        .theme-toggle {
+            border: 1px solid var(--line);
+            background: transparent;
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-family: "Space Mono", monospace;
+            cursor: pointer;
+        }
+
+        .hero-metric {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            border: 1px solid var(--line);
+            background: var(--surface);
+            margin-bottom: 22px;
+        }
+
+        .hero-value {
+            padding: 30px 24px;
+            border-right: 1px solid var(--line);
+        }
+
+        .hero-label {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-family: "Space Mono", monospace;
+        }
+
+        .hero-number {
+            margin: 12px 0 0;
+            color: var(--text-display);
+            font-size: clamp(2.8rem, 8vw, 5rem);
+            line-height: 0.95;
+            font-weight: 700;
+        }
+
+        .hero-breakdown {
+            padding: 22px 24px;
+            display: grid;
+            gap: 14px;
+            align-content: center;
+        }
+
+        .mini-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 9px;
+        }
+
+        .mini-label {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-family: "Space Mono", monospace;
+        }
+
+        .mini-value {
+            margin: 0;
+            color: var(--text-display);
+            font-size: 1.32rem;
+            font-weight: 500;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 26px;
+        }
+
+        .stat {
+            border: 1px solid var(--line);
+            background: var(--surface);
+            padding: 16px;
+        }
+
+        .stat-title {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-family: "Space Mono", monospace;
+        }
+
+        .stat-number {
+            margin: 11px 0 0;
+            color: var(--text-display);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-bar {
+            margin-top: 12px;
+            height: 5px;
+            background: var(--line);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-bar > span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: var(--text-display);
+        }
+
+        .table-wrap {
+            border: 1px solid var(--line);
+            background: var(--surface-2);
+            overflow-x: auto;
+        }
+
+        .table-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .table-title {
+            margin: 0;
+            color: var(--text-display);
+            font-size: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .table-note {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.13em;
+            font-family: "Space Mono", monospace;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 780px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 11px 16px;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-family: "Space Mono", monospace;
+            font-weight: 400;
+        }
+
+        td {
+            color: var(--text-primary);
+            font-size: 0.92rem;
+        }
+
+        .muted {
+            color: var(--text-secondary);
+        }
+
+        .value-strong {
+            color: var(--text-display);
+            font-weight: 700;
+        }
+
+        .country-pill {
+            display: inline-block;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 2px 9px;
+            font-size: 0.72rem;
+            font-family: "Space Mono", monospace;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 980px) {
+            .hero-metric {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-value {
+                border-right: 0;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                padding: 18px 12px 32px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 30px;
+            }
+
+            .meta {
+                align-items: flex-start;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body data-theme="dark">
+<main class="shell">
+    <section class="topbar">
+        <div>
+            <h1 class="headline">DASHBOARD</h1>
+            <p class="subtitle">Bot activity & user statistics</p>
+        </div>
+        <div class="meta">
+            <div class="meta-row"><span class="dot"></span>PANEL</div>
+            <div class="meta-row">UPDATED <span id="lastUpdate">--</span></div>
+            <button id="themeToggle" class="theme-toggle" type="button">Switch Theme</button>
+        </div>
+    </section>
 
-<!-- Header -->
-<header class="bg-white shadow-sm sticky top-0 z-10">
-    <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="p-2 bg-indigo-100 rounded-lg">
-                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
+    <section class="hero-metric">
+        <div class="hero-value">
+            <p class="hero-label">Total messages processed</p>
+            <p class="hero-number" id="totalMessages">0</p>
+        </div>
+        <div class="hero-breakdown">
+            <div class="mini-row">
+                <p class="mini-label">Total users</p>
+                <p class="mini-value" id="totalUsers">0</p>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight text-gray-900">Usage Dashboard</h1>
+            <div class="mini-row">
+                <p class="mini-label">Average / user</p>
+                <p class="mini-value" id="avgMessages">0</p>
+            </div>
+            <div class="mini-row" style="border-bottom: 0; padding-bottom: 0;">
+                <p class="mini-label">Active languages</p>
+                <p class="mini-value" id="activeCountries">0</p>
+            </div>
         </div>
-        <div class="flex items-center space-x-2 text-sm text-gray-500">
-            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span>Last updated: <span id="lastUpdate" class="font-medium"></span></span>
-        </div>
-    </div>
-</header>
+    </section>
 
-<!-- Main Content -->
-<main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-    <!-- Stats Overview -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <!-- Total Users -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-100 mr-4">
-                    <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-gray-500 text-sm font-medium">Total users</h3>
-                    <p class="text-2xl font-bold text-gray-900" id="totalUsers">0</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Total Messages -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 mr-4">
-                    <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-gray-500 text-sm font-medium">Total messages</h3>
-                    <p class="text-2xl font-bold text-gray-900" id="totalMessages">0</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Average Messages -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-100 mr-4">
-                    <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-gray-500 text-sm font-medium">Avg messages/user</h3>
-                    <p class="text-2xl font-bold text-gray-900" id="avgMessages">0</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Active Countries -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-yellow-100 mr-4">
-                    <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="text-gray-500 text-sm font-medium">Active Countries</h3>
-                    <p class="text-2xl font-bold text-gray-900" id="activeCountries">0</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <section class="grid">
+        <article class="stat">
+            <p class="stat-title">Most active user</p>
+            <p class="stat-number" id="topUserMessages">0</p>
+            <div class="stat-bar"><span id="topUserBar"></span></div>
+        </article>
+        <article class="stat">
+            <p class="stat-title">Recent activity (24h)</p>
+            <p class="stat-number" id="recentUsers">0</p>
+            <div class="stat-bar"><span id="recentUsersBar"></span></div>
+        </article>
+        <article class="stat">
+            <p class="stat-title">Active users (7d)</p>
+            <p class="stat-number" id="weeklyUsers">0</p>
+            <div class="stat-bar"><span id="weeklyUsersBar"></span></div>
+        </article>
+    </section>
 
-    <!-- Users Table -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">User activity</h2>
-        <div class="overflow-x-auto">
-            <table id="usersTable" class="w-full border-collapse">
-                <thead>
-                <tr class="bg-gray-50 text-left">
-                    <th class="px-6 py-3 border-b border-gray-200">Name</th>
-                    <th class="px-6 py-3 border-b border-gray-200">Username</th>
-                    <th class="px-6 py-3 border-b border-gray-200">Country</th>
-                    <th class="px-6 py-3 border-b border-gray-200">Messages</th>
-                    <th class="px-6 py-3 border-b border-gray-200">Last active</th>
-                </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
+    <section class="table-wrap">
+        <div class="table-head">
+            <h2 class="table-title">User activity table</h2>
+            <p class="table-note">Ordered by message volume</p>
         </div>
-    </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Language</th>
+                <th>Messages</th>
+                <th>Last active</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </section>
 </main>
 
-<!-- Scripts -->
 <script>
-    const users = {{!user_data}}
-    
-    document.addEventListener('DOMContentLoaded', () => {
+    const users = {{!user_data}};
+
+    document.addEventListener("DOMContentLoaded", () => {
         updateLastUpdatedTime();
         updateStats();
         initTable();
+        setupThemeToggle();
     });
 
     function updateLastUpdatedTime() {
-        const lastUpdateElement = document.getElementById('lastUpdate');
-        if (lastUpdateElement) {
-            lastUpdateElement.textContent = new Date().toLocaleString();
-        }
+        const el = document.getElementById("lastUpdate");
+        el.textContent = new Date().toLocaleString();
     }
 
     function updateStats() {
         const totalUsers = users.length;
-        const totalMessages = users.reduce((sum, user) => sum + user.messageCount, 0);
+        const totalMessages = users.reduce((sum, user) => sum + safeNumber(user.messageCount), 0);
         const avgMessages = totalUsers > 0 ? Math.round(totalMessages / totalUsers) : 0;
-        const activeCountries = new Set(users.map(u => u.languageCode)).size;
+        const activeCountries = new Set(users.map((u) => (u.languageCode || "").trim()).filter(Boolean)).size;
 
-        document.getElementById('totalUsers').textContent = totalUsers;
-        document.getElementById('totalMessages').textContent = totalMessages.toLocaleString();
-        document.getElementById('avgMessages').textContent = avgMessages;
-        document.getElementById('activeCountries').textContent = activeCountries;
+        const sorted = [...users].sort((a, b) => safeNumber(b.messageCount) - safeNumber(a.messageCount));
+        const topUserMessages = sorted.length > 0 ? safeNumber(sorted[0].messageCount) : 0;
+        const users24h = users.filter((u) => isWithinHours(u.lastMessageTime, 24)).length;
+        const users7d = users.filter((u) => isWithinHours(u.lastMessageTime, 24 * 7)).length;
+
+        setText("totalUsers", formatNumber(totalUsers));
+        setText("totalMessages", formatNumber(totalMessages));
+        setText("avgMessages", formatNumber(avgMessages));
+        setText("activeCountries", formatNumber(activeCountries));
+        setText("topUserMessages", formatNumber(topUserMessages));
+        setText("recentUsers", formatNumber(users24h));
+        setText("weeklyUsers", formatNumber(users7d));
+
+        updateBar("topUserBar", topUserMessages, topUserMessages || 1);
+        updateBar("recentUsersBar", users24h, totalUsers || 1);
+        updateBar("weeklyUsersBar", users7d, totalUsers || 1);
     }
 
     function initTable() {
-        const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = '';
+        const tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = "";
 
-        users.forEach(user => {
-            const row = document.createElement('tr');
-            const lastActiveDate = new Date(user.lastMessageTime);
+        const sortedUsers = [...users].sort((a, b) => safeNumber(b.messageCount) - safeNumber(a.messageCount));
+        sortedUsers.forEach((user) => {
+            const row = document.createElement("tr");
+            const firstName = (user.firstName || "").trim();
+            const lastName = (user.lastName || "").trim();
+            const fullName = `${firstName} ${lastName}`.trim() || "Unknown";
+            const username = (user.userName || "").trim();
+            const country = (user.languageCode || "n/a").toUpperCase();
+            const messageCount = safeNumber(user.messageCount);
+            const lastActiveDate = parseDate(user.lastMessageTime);
+            const dateText = lastActiveDate ? lastActiveDate.toLocaleDateString() : "N/A";
+            const timeText = lastActiveDate ? lastActiveDate.toLocaleTimeString() : "N/A";
 
             row.innerHTML = `
-                <td class="px-6 py-3 border-b border-gray-200">${user.firstName} ${user.lastName || ''}</td>
-                <td class="px-6 py-3 border-b border-gray-200 text-gray-600">@${user.userName}</td>
-                <td class="px-6 py-3 border-b border-gray-200">
-                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-medium">${user.languageCode.toUpperCase()}</span>
-                </td>
-                <td class="px-6 py-3 border-b border-gray-200 font-medium">${user.messageCount.toLocaleString()}</td>
-                <td class="px-6 py-3 border-b border-gray-200 text-sm">
-                    <div class="text-gray-600">${lastActiveDate.toLocaleDateString()}</div>
-                    <div class="text-gray-400 text-xs">${lastActiveDate.toLocaleTimeString()}</div>
-                </td>
+                <td>${escapeHtml(fullName)}</td>
+                <td class="muted">${username ? `@${escapeHtml(username)}` : "-"}</td>
+                <td><span class="country-pill">${escapeHtml(country)}</span></td>
+                <td class="value-strong">${formatNumber(messageCount)}</td>
+                <td><span>${dateText}</span> <span class="muted">${timeText}</span></td>
             `;
+
             tableBody.appendChild(row);
         });
+    }
+
+    function setupThemeToggle() {
+        const button = document.getElementById("themeToggle");
+        button.addEventListener("click", () => {
+            const body = document.body;
+            body.dataset.theme = body.dataset.theme === "dark" ? "light" : "dark";
+        });
+    }
+
+    function updateBar(id, value, max) {
+        const element = document.getElementById(id);
+        const percent = Math.max(0, Math.min(100, (safeNumber(value) / safeNumber(max)) * 100));
+        element.style.width = `${percent}%`;
+    }
+
+    function isWithinHours(rawDate, hours) {
+        const d = parseDate(rawDate);
+        if (!d) {
+            return false;
+        }
+        const diff = Date.now() - d.getTime();
+        return diff >= 0 && diff <= hours * 60 * 60 * 1000;
+    }
+
+    function parseDate(rawDate) {
+        if (!rawDate) {
+            return null;
+        }
+        const d = new Date(rawDate);
+        return Number.isNaN(d.getTime()) ? null : d;
+    }
+
+    function safeNumber(value) {
+        const n = Number(value);
+        return Number.isFinite(n) ? n : 0;
+    }
+
+    function formatNumber(value) {
+        return safeNumber(value).toLocaleString();
+    }
+
+    function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = value;
+        }
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
     }
 </script>
 </body>

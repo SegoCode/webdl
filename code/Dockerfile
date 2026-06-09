@@ -8,17 +8,11 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Runtime stage: Run the application
-FROM alpine:latest
+FROM eclipse-temurin:21-jre-alpine
 
-RUN apk update && \
-    apk add --no-cache wget curl ffmpeg && \
+RUN apk add --no-cache ffmpeg python3 && \
     wget -O /usr/local/bin/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp && \
-    chmod a+rx /usr/local/bin/yt-dlp && \
-    rm -rf /var/cache/apk/*
-
-RUN apk add --no-cache openjdk21 python3 py3-pip
-
-ENV YT_DLP=/usr/bin/yt-dlp PYTHONUNBUFFERED=1
+    chmod a+rx /usr/local/bin/yt-dlp
 
 WORKDIR /app
 COPY --from=build /app/target/webdl.jar /app/webdl.jar

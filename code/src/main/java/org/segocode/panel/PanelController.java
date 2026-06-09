@@ -47,7 +47,10 @@ private void handleAdminRequest(Context ctx) {
     try {
         InputStream inputStream = getClass().getResourceAsStream("/views/admin.html");
         String htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        String jsonData = new Gson().toJson(((DataRootContainer)storageManager.root()).getUsers());
+        String jsonData;
+        synchronized (storageManager) {
+            jsonData = new Gson().toJson(((DataRootContainer)storageManager.root()).getUsers());
+        }
         htmlContent = htmlContent.replace("{{!user_data}}", jsonData);
 
         ctx.result(htmlContent);

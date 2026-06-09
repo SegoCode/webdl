@@ -70,9 +70,10 @@ public class Webdlbot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             try {
+                long queuedTasks = executorService.getTaskCount() - executorService.getCompletedTaskCount();
                 Integer queuedMessageId;
-                if (executorService.getActiveCount() > 0 || !executorService.getQueue().isEmpty()) {
-                    String messageTime = DOWNLOAD_REQUEST_QUEUED + " (<" + executorService.getQueue().size() + "m)";
+                if (queuedTasks > 0) {
+                    String messageTime = DOWNLOAD_REQUEST_QUEUED + " (<" + queuedTasks + "m)";
                     LOGGER.info("Executor is busy, queuing the message from @{}", update.getMessage().getFrom().getUserName());
                     queuedMessageId = execute(MessageService.sendTextMessage(update.getMessage().getChatId(), update.getMessage().getMessageId(), messageTime)).getMessageId();
                 } else {
@@ -89,14 +90,16 @@ public class Webdlbot extends TelegramLongPollingBot {
                     } catch (Exception e) {
                         LOGGER.error("Failed to launch dispatch, error: {}", e.getMessage(), e);
                         handleDispatchError(update, e);
+                    } finally {
+                        synchronized (storageManager) {
+                            storageManager.setRoot(loadMetricsData(update));
+                            storageManager.storeRoot();
+                        }
                     }
                 });
             } catch (Exception e) {
                 LOGGER.error("Failed on onUpdateReceived, error: {}", e.getMessage(), e);
                 handleDispatchError(update, e);
-            } finally {
-                storageManager.setRoot(loadMetricsData(update));
-                storageManager.storeRoot();
             }
         }
     }
@@ -106,7 +109,7 @@ public class Webdlbot extends TelegramLongPollingBot {
                 Message message = update.getMessage();
                 LOGGER.info("Starting message processing from @{}: {}", message.getFrom().getUserName(), message.getText());
 
-                if(!update.getMessage().toString().contains("http")) {
+                if(!update.getMessage().getText().contains("http")) {
                     execute(MessageService.sendTextMessage(message.getChatId(), message.getMessageId(), NOT_VALID_LINK)).getMessageId();
                     return;
                 } else {
