@@ -179,51 +179,6 @@
             font-weight: 500;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 12px;
-            margin-bottom: 26px;
-        }
-
-        .stat {
-            border: 1px solid var(--line);
-            background: var(--surface);
-            padding: 16px;
-        }
-
-        .stat-title {
-            margin: 0;
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            font-family: "Space Mono", monospace;
-        }
-
-        .stat-number {
-            margin: 11px 0 0;
-            color: var(--text-display);
-            font-size: 2rem;
-            font-weight: 700;
-            line-height: 1;
-        }
-
-        .stat-bar {
-            margin-top: 12px;
-            height: 5px;
-            background: var(--line);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-bar > span {
-            display: block;
-            height: 100%;
-            width: 0;
-            background: var(--text-display);
-        }
-
         .table-wrap {
             border: 1px solid var(--line);
             background: var(--surface-2);
@@ -312,10 +267,6 @@
                 border-right: 0;
                 border-bottom: 1px solid var(--line);
             }
-
-            .grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
         }
 
         @media (max-width: 640px) {
@@ -331,10 +282,6 @@
 
             .meta {
                 align-items: flex-start;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -372,24 +319,6 @@
                 <p class="mini-value" id="activeCountries">0</p>
             </div>
         </div>
-    </section>
-
-    <section class="grid">
-        <article class="stat">
-            <p class="stat-title">Most active user</p>
-            <p class="stat-number" id="topUserMessages">0</p>
-            <div class="stat-bar"><span id="topUserBar"></span></div>
-        </article>
-        <article class="stat">
-            <p class="stat-title">Recent activity (24h)</p>
-            <p class="stat-number" id="recentUsers">0</p>
-            <div class="stat-bar"><span id="recentUsersBar"></span></div>
-        </article>
-        <article class="stat">
-            <p class="stat-title">Active users (7d)</p>
-            <p class="stat-number" id="weeklyUsers">0</p>
-            <div class="stat-bar"><span id="weeklyUsersBar"></span></div>
-        </article>
     </section>
 
     <section class="table-wrap">
@@ -433,22 +362,10 @@
         const avgMessages = totalUsers > 0 ? Math.round(totalMessages / totalUsers) : 0;
         const activeCountries = new Set(users.map((u) => (u.languageCode || "").trim()).filter(Boolean)).size;
 
-        const sorted = [...users].sort((a, b) => safeNumber(b.messageCount) - safeNumber(a.messageCount));
-        const topUserMessages = sorted.length > 0 ? safeNumber(sorted[0].messageCount) : 0;
-        const users24h = users.filter((u) => isWithinHours(u.lastMessageTime, 24)).length;
-        const users7d = users.filter((u) => isWithinHours(u.lastMessageTime, 24 * 7)).length;
-
         setText("totalUsers", formatNumber(totalUsers));
         setText("totalMessages", formatNumber(totalMessages));
         setText("avgMessages", formatNumber(avgMessages));
         setText("activeCountries", formatNumber(activeCountries));
-        setText("topUserMessages", formatNumber(topUserMessages));
-        setText("recentUsers", formatNumber(users24h));
-        setText("weeklyUsers", formatNumber(users7d));
-
-        updateBar("topUserBar", topUserMessages, topUserMessages || 1);
-        updateBar("recentUsersBar", users24h, totalUsers || 1);
-        updateBar("weeklyUsersBar", users7d, totalUsers || 1);
     }
 
     function initTable() {
