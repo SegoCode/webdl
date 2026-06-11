@@ -65,12 +65,24 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.segocode.Main</mainClass>
+                                    <mainClass>org.segocode.webdl.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <java>
+                        <palantirJavaFormat>
+                            <version>2.92.0</version>
+                        </palantirJavaFormat>
+                    </java>
+                </configuration>
             </plugin>
         </plugins>
     </build>

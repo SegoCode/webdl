@@ -1,4 +1,4 @@
-package org.segocode.system.command;
+package org.segocode.webdl.system.command;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,14 +26,16 @@ public class CommandExecutor {
 
         // The -q option is important to prevent deadlocks by ensuring the output buffer is not filled.
         // TODO: make a StreamGobbler to handle buffered output and avoid deadlocks.
-        String[] command = { ytDlpCommand, "-q", "-S", "ext,res:720", "-o", outputPath, url };
+        String[] command = {ytDlpCommand, "-q", "-S", "ext,res:720", "-o", outputPath, url};
 
         int attempt = 0;
         while (attempt++ < MAX_RETRIES) {
-            LOGGER.info("Attempt {} of " + MAX_RETRIES, attempt);
+            LOGGER.info("Attempt {} of {}", attempt, MAX_RETRIES);
             try {
                 Process process = new ProcessBuilder(command).start();
-                if (process.waitFor(TIMEOUT, TimeUnit.SECONDS) ? process.exitValue() == 0 : process.destroyForcibly() == null) {
+                if (process.waitFor(TIMEOUT, TimeUnit.SECONDS)
+                        ? process.exitValue() == 0
+                        : process.destroyForcibly() == null) {
                     LOGGER.info("Download successful for URL: {}", url);
                     return;
                 } else {
@@ -41,7 +43,7 @@ public class CommandExecutor {
                     process.destroyForcibly();
                 }
             } catch (IOException e) {
-                LOGGER.error("I/O error occurred on attempt {} of " + MAX_RETRIES, attempt, e);
+                LOGGER.error("I/O error occurred on attempt {} of {}", attempt, MAX_RETRIES, e);
                 if (attempt >= MAX_RETRIES) {
                     throw e;
                 }

@@ -1,4 +1,4 @@
-package org.segocode.bot.util;
+package org.segocode.webdl.bot.util;
 
 public class MessageUtil {
     public static String extractUrlFromMessage(String messageText) {

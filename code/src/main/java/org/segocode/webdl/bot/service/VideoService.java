@@ -1,13 +1,11 @@
-package org.segocode.bot.service;
+package org.segocode.webdl.bot.service;
 
-import org.segocode.system.util.FileUtil;
+import java.io.File;
+import org.segocode.webdl.system.util.FileUtil;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
-
-import java.io.File;
-import org.slf4j.Logger;
-
 
 public class VideoService {
     private static final Logger LOGGER = LoggerFactory.getLogger(VideoService.class);
@@ -20,16 +18,19 @@ public class VideoService {
      * @return The SendVideo object configured with the chat ID and reply to message ID.
      */
     public static SendVideo sendVideo(Long chatId, Integer replyToMessageId) {
-            String filePath = buildFilePath(replyToMessageId);
-            LOGGER.info("Locating video file for message ID {}: {}", replyToMessageId, filePath);
+        String filePath = buildFilePath(replyToMessageId);
+        LOGGER.info("Locating video file for message ID {}: {}", replyToMessageId, filePath);
 
-            File videoFile = FileUtil.locateVideoFile(filePath);
-            LOGGER.info("Video file located successfully: {}", videoFile.getPath());
+        File videoFile = FileUtil.locateVideoFile(filePath);
+        if (videoFile == null) {
+            throw new RuntimeException("Video file not found for message ID: " + replyToMessageId);
+        }
+        LOGGER.info("Video file located successfully: {}", videoFile.getPath());
 
-            SendVideo sendVideoRequest = createSendVideoRequest(chatId, replyToMessageId, videoFile);
-            LOGGER.info("Video is sending. Chat ID: {}, Reply to Message ID: {}", chatId, replyToMessageId);
+        SendVideo sendVideoRequest = createSendVideoRequest(chatId, replyToMessageId, videoFile);
+        LOGGER.info("Video is sending. Chat ID: {}, Reply to Message ID: {}", chatId, replyToMessageId);
 
-            return sendVideoRequest;
+        return sendVideoRequest;
     }
 
     /**
@@ -57,6 +58,4 @@ public class VideoService {
     private static String buildFilePath(Integer replyToMessageId) {
         return "./downloads/" + replyToMessageId + ".mp4";
     }
-
-
 }
