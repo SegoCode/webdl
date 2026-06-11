@@ -1,12 +1,11 @@
-package org.segocode.bot.model;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package org.segocode.webdl.bot.model;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -21,8 +20,6 @@ public class DataRootContainer {
      * @return An Optional containing the user if found, empty otherwise
      */
     public Optional<User> findUserById(String id) {
-        return users.stream()
-                .filter(user -> id.equals(user.getId()))
-                .findFirst();
+        return users.stream().filter(user -> id.equals(user.getId())).findFirst();
     }
 }

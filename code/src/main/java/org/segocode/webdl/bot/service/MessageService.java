@@ -1,4 +1,4 @@
-package org.segocode.bot.service;
+package org.segocode.webdl.bot.service;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;

@@ -1,4 +1,4 @@
-package org.segocode.system.util;
+package org.segocode.webdl.system.util;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class FileUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileUtil.class);

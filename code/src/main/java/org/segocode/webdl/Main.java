@@ -1,17 +1,13 @@
-package org.segocode;
+package org.segocode.webdl;
 
-import io.javalin.Javalin;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorage;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
-import org.eclipse.store.storage.types.StorageManager;
-import org.segocode.bot.Webdlbot;
-import org.segocode.panel.PanelController;
+import org.segocode.webdl.bot.Webdlbot;
+import org.segocode.webdl.panel.PanelApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
-import java.util.Date;
 
 public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
@@ -25,7 +21,7 @@ public class Main {
             botsApi.registerBot(new Webdlbot(storageManager));
             LOGGER.info("Bot started successfully and ready to download videos 🚀");
             LOGGER.info("Starting webp anel app...");
-            PanelController.start(storageManager);
+            PanelApplication.start(storageManager);
         } catch (Exception e) {
             LOGGER.error("Error while attempting to start the bot. Error details:", e);
         }
