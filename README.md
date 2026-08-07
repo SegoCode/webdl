@@ -32,12 +32,6 @@ Telegram bot in Java for downloading social media videos using [yt-dlp](https://
 
 Requires Java 21, Maven, and [yt-dlp](https://github.com/yt-dlp/yt-dlp) available on `PATH`. Set `BOT_TOKEN` to your Telegram bot token.
 
-> [!TIP]
-> Prefer Docker if you want yt-dlp and the runtime bundled without a local Maven setup.
-
-> [!IMPORTANT]
-> `BOT_TOKEN` must be set or the bot will fail to start.
-
 ### From source
 
 ```shell
@@ -59,25 +53,6 @@ docker run -d \
   -e BOT_TOKEN=your-bot-token \
   webdl-image
 ```
-
-### Project structure
-
-```
-code/src/main/java/org/segocode/webdl/
-├── Main.java                          # Entry point
-├── bot/
-│   ├── Webdlbot.java                  # Telegram long-polling bot
-│   ├── constants/Messages.java        # User-facing message strings
-│   ├── service/{MessageService,VideoService}.java
-│   └── util/MessageUtil.java
-└── system/
-    ├── command/CommandExecutor.java   # yt-dlp subprocess with retry
-    └── util/FileUtil.java
-```
-
-## Download
-
-[Latest release](https://github.com/SegoCode/webdl/releases/latest)
 
 ---
 <p align="center"><a href="https://github.com/SegoCode/webdl/graphs/contributors">
