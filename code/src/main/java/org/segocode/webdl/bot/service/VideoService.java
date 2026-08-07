@@ -1,6 +1,8 @@
 package org.segocode.webdl.bot.service;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.segocode.webdl.system.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,12 @@ public class VideoService {
      * @return The SendVideo object configured with the chat ID and reply to message ID.
      */
     public static SendVideo sendVideo(Long chatId, Integer replyToMessageId) {
-        String filePath = buildFilePath(replyToMessageId);
+        return sendVideo(chatId, replyToMessageId, Paths.get("./downloads"));
+    }
+
+    static SendVideo sendVideo(Long chatId, Integer replyToMessageId, Path downloadsDirectory) {
+        String filePath =
+                downloadsDirectory.resolve(replyToMessageId.toString()).toString();
         LOGGER.info("Locating video file for message ID {}: {}", replyToMessageId, filePath);
 
         File videoFile = FileUtil.locateVideoFile(filePath);
@@ -47,15 +54,5 @@ public class VideoService {
         sendVideoRequest.setReplyToMessageId(replyToMessageId);
         sendVideoRequest.setVideo(new InputFile(videoFile));
         return sendVideoRequest;
-    }
-
-    /**
-     * Builds the file path for the video file based on the given replyToMessageId.
-     *
-     * @param replyToMessageId The ID of the message to which this video will be a reply.
-     * @return The file path as a String.
-     */
-    private static String buildFilePath(Integer replyToMessageId) {
-        return "./downloads/" + replyToMessageId + ".mp4";
     }
 }

@@ -1,12 +1,13 @@
 package org.segocode.webdl.bot.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MessageUtil {
+    private static final Pattern URL_PATTERN = Pattern.compile("https?://\\S+");
+
     public static String extractUrlFromMessage(String messageText) {
-        int startIndex = messageText.indexOf("http");
-        int endIndex = messageText.indexOf(" ", startIndex);
-        if (endIndex == -1) {
-            endIndex = messageText.length();
-        }
-        return messageText.substring(startIndex, endIndex);
+        Matcher matcher = URL_PATTERN.matcher(messageText);
+        return matcher.find() ? matcher.group() : null;
     }
 }

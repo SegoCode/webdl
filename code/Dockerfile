@@ -15,5 +15,6 @@ RUN apk add --no-cache ffmpeg python3 && \
     chmod a+rx /usr/local/bin/yt-dlp
 
 WORKDIR /app
+RUN mkdir downloads
 COPY --from=build /app/target/webdl.jar /app/webdl.jar
 ENTRYPOINT ["java", "-jar", "/app/webdl.jar"]
