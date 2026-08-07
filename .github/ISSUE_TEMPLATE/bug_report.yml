@@ -42,14 +42,21 @@ body:
 
   - type: dropdown
     attributes:
-      label: OS version
+      label: Platform
+      description: Where does the issue occur?
       options:
-        - Windows 11
-        - Windows 10
-        - Windows Other
-        - Linux Debian
-        - Linux Arch
-        - Linux Other
+        - Web — Chrome (Blink)
+        - Web — Firefox (Gecko)
+        - Web — Safari (WebKit)
+        - Web — Other
+        - Desktop — macOS
+        - Desktop — Windows
+        - Desktop — Linux
+        - Desktop — Other
+        - Mobile — iOS
+        - Mobile — Android
+        - Mobile — Other
+        - Other
     validations:
       required: true
 
