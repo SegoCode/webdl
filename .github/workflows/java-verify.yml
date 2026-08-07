@@ -2,19 +2,6 @@ name: Java verify
 
 on:
   pull_request:
-  workflow_dispatch:
-  workflow_call:
-    inputs:
-      working-directory:
-        description: Directory containing the Maven project
-        required: false
-        type: string
-        default: ''
-      java-version:
-        description: Java version used to build and test the project
-        required: false
-        type: string
-        default: '21'
 
 permissions:
   contents: read
@@ -27,35 +14,20 @@ jobs:
   verify:
     name: Compile and test
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
-
-      - name: Find Maven project
-        id: project
-        env:
-          CONFIGURED_DIRECTORY: ${{ inputs.working-directory }}
-        run: |
-          if [ -n "$CONFIGURED_DIRECTORY" ]; then
-            directory="$CONFIGURED_DIRECTORY"
-          elif [ -f pom.xml ]; then
-            directory="."
-          elif [ -f code/pom.xml ]; then
-            directory="code"
-          else
-            echo "No pom.xml found" >&2
-            exit 1
-          fi
-          echo "directory=$directory" >> "$GITHUB_OUTPUT"
 
       - name: Set up Java
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: ${{ inputs.java-version || '21' }}
+          java-version: '21'
           cache: maven
-          cache-dependency-path: ${{ steps.project.outputs.directory }}/pom.xml
+          cache-dependency-path: code/pom.xml
 
       - name: Verify Maven project
-        working-directory: ${{ steps.project.outputs.directory }}
         run: mvn --batch-mode --no-transfer-progress verify
