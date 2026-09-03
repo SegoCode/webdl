@@ -28,7 +28,7 @@ Telegram bot in Java for downloading social media videos using [yt-dlp](https://
 
 ## Quick Start & Information
 
-Requires Java 21, Maven, and [yt-dlp](https://github.com/yt-dlp/yt-dlp) available on `PATH`. Set `BOT_TOKEN` to your Telegram bot token.
+Requires Java 21, Maven, and [yt-dlp](https://github.com/yt-dlp/yt-dlp) available on `PATH` and set `BOT_TOKEN` to your Telegram bot token.
 
 ### From source
 
